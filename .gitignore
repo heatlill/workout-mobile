@@ -1,0 +1,9 @@
+.classpath
+.project
+
+*.bak
+*.log
+*.tmp
+
+gen
+
