@@ -1,0 +1,19 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:id="@+id/date_setter_popup_view"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:paddingLeft="10sp"
+    android:paddingRight="10sp"
+    android:padding="10px"
+    android:background="@drawable/border_layout">
+    <DatePicker
+        android:id="@+id/date_setter_view"
+        android:layout_centerInParent="true"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+    </DatePicker>
+   
+    <include layout="@layout/save_cancel_layout" android:layout_centerInParent="true"/>
+</LinearLayout>

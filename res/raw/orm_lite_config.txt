@@ -1,0 +1,28 @@
+# --table-start--
+dataClass=com.example.helloandroid.SimpleData
+tableName=exercise
+# --table-fields-start--
+# --field-start--
+fieldName=id
+canBeNull=false
+generatedId=false
+# --field-end--
+# --field-start--
+fieldName=unit_id
+canBeNull=false
+# --field-end--
+# --field-start--
+fieldName=name
+canBeNull=false
+# --field-end--
+# --field-start--
+fieldName=description
+canBeNull=true
+# --field-end--
+# --field-start--
+fieldName=even
+canBeNull=true
+# --field-end--
+# --table-fields-end--
+# --table-end--
+#################################

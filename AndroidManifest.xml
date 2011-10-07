@@ -5,7 +5,7 @@
     android:versionCode="1"
     android:versionName="1.0">
     <uses-sdk
-        android:minSdkVersion="8" />
+        android:minSdkVersion="8"/>
     <instrumentation
         android:name="MainInstrumentation"
         android:targetPackage="workout"></instrumentation>
@@ -16,18 +16,18 @@
         android:hasCode="true"
         android:debuggable="true">
         <activity
-            android:label="@string/app_name" android:name=".controller.MainMenuView">
+            android:label="@string/app_name"
+            android:name=".controller.MainMenuView">
             <intent-filter>
                 <action
-                    android:name="android.intent.action.MAIN" />
+                    android:name="android.intent.action.MAIN"/>
                 <category
-                    android:name="android.intent.category.LAUNCHER" />
+                    android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
         <activity
-            android:label="@string/app_name" android:name=".controller.CurrentWorkoutView">
+            android:label="@string/app_name"
+            android:name=".controller.CurrentWorkoutView">
         </activity>
-        
-
     </application>
 </manifest>

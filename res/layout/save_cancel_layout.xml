@@ -1,0 +1,23 @@
+
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:id="@+id/save_cancel_layout"
+    android:paddingLeft="10sp"
+    android:paddingRight="10sp"
+    android:padding="10px">
+    <Button
+        android:id="@+id/save_date_button"
+        android:text="Save"
+        android:layout_width="200px"
+        android:layout_height="wrap_content">
+    </Button>
+    <Button
+        android:layout_toRightOf="@+id/save_date_button"
+        android:id="@+id/cancel_date_button"
+        android:text="Cancel"
+        android:layout_width="200px"
+        android:layout_height="wrap_content">
+    </Button>
+</RelativeLayout>
