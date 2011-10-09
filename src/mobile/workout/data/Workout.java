@@ -2,34 +2,38 @@ package mobile.workout.data;
 
 import java.util.List;
 
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
+@DatabaseTable( tableName="workout" )
 public class Workout implements DataI {
+    @DatabaseField( columnName="id", id=true, canBeNull=false )
     public long timeId;
+    @DatabaseField( columnName="workout_date", canBeNull=false )
     public final Long datePerformed;
     public final List < Exercise > exercisesPerformed;
-    public final Integer userName;
 
     private Workout(final Builder builder) {
         super();
-        if ( builder == null || builder.datePerformed == null
-                || builder.userName == null ) {
+        if ( builder == null || builder.datePerformed == null ) {
             throw new IllegalArgumentException( "Invalid builder argument." );
         }
         timeId = System.currentTimeMillis();
         datePerformed = builder.datePerformed;
-        userName = builder.userName;
         exercisesPerformed = builder.exercisesPerformed == null ? Exercise.EMPTY_EXERCISES
                 : builder.exercisesPerformed;
     }
+    
+    public Workout() {
+        this( new Builder( System.currentTimeMillis() ) );
+    }
 
     public static final class Builder {
-        public Builder(Long datePerformed, Integer userName) {
+        public Builder( Long datePerformed ) {
             super();
             this.datePerformed = datePerformed;
-            this.userName = userName;
         }
 
         private Long datePerformed;
-        private Integer userName;
         private List < Exercise > exercisesPerformed;
 
         public Builder setExerciesPerformed( List < Exercise > exercise ) {

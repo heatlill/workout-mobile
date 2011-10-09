@@ -1,5 +1,5 @@
 # --table-start--
-dataClass=com.example.helloandroid.SimpleData
+dataClass=mobile.workout.data.Exercise
 tableName=exercise
 # --table-fields-start--
 # --field-start--

@@ -1,13 +1,13 @@
 package mobile.workout.controller;
 
+import java.sql.SQLException;
 import java.text.DateFormat;
-import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import mobile.workout.R;
 import mobile.workout.data.Exercise;
 import mobile.workout.data.Workout;
-import mobile.workout.db.HelperFactoryI;
 import mobile.workout.db.WorkoutTrackerDatabaseHelper;
 import mobile.workout.db.WorkoutTrackerDatabaseHelperFactory;
 import android.app.Activity;
@@ -21,27 +21,33 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.PopupWindow;
 
+import com.j256.ormlite.dao.Dao;
+
 public class CurrentWorkoutView extends Activity {
-    private static String tag = CurrentWorkoutView.class.getName();
+    private static String TAG = CurrentWorkoutView.class.getName();
     private long date = 0;
-    public Workout currentWorkout;
-    public WorkoutTrackerDatabaseHelper helper;
+    
+    private ArrayAdapter < Exercise > exerciseListAdapter;
+    
+    private WorkoutTrackerDatabaseHelper helper;
+    
+    protected Workout currentWorkout;
+    protected WorkoutTrackerDatabaseHelperFactory factory;
 
     @Override
     protected void onCreate( Bundle savedInstanceState ) {
         setContentView( R.layout.current_workout_view );
+        initialize();
+        
         Button addExerciseButton = ( Button ) findViewById( R.id.add_exercise_button );
         Button dateButton = ( Button ) findViewById( R.id.workout_date_control );
         DateFormat dateFormat = DateFormat.getDateInstance( DateFormat.MEDIUM );
         ListView currentWorkoutView = ( ListView ) findViewById( R.id.current_workout_list_view );
-        currentWorkout = getCurrentWorkout();
-        final ArrayList < Exercise > exercises = new ArrayList < Exercise >( 5 );
-        final ArrayAdapter < Exercise > exerciseListAdapter = new ArrayAdapter < Exercise >(
-                this, android.R.layout.simple_expandable_list_item_1, exercises );
+        
         addExerciseButton.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick( View v ) {
-                addExercise( exercises, exerciseListAdapter );
+                addExercise( );
             }
         } );
 
@@ -62,10 +68,11 @@ public class CurrentWorkoutView extends Activity {
         super.onCreate( savedInstanceState );
     }
 
-    private void addExercise( final ArrayList < Exercise > exercises,
-            final ArrayAdapter < Exercise > exerciseListAdapter ) {
+    private void addExercise( ) {
+        List < Exercise > exercises = currentWorkout.exercisesPerformed;
         exercises.add( new Exercise.Builder( "Exercise"
                 + ( exercises.size() + 1 ) ).Build() );
+        
         exerciseListAdapter.notifyDataSetChanged();
     }
 
@@ -95,7 +102,11 @@ public class CurrentWorkoutView extends Activity {
 
             @Override
             public void onClick( View v ) {
-
+                try {
+                    helper.getWorkoutDao().update( currentWorkout );
+                } catch ( SQLException e ) {
+                    throw new IllegalStateException( e );
+                }
             }
         } );
     }
@@ -107,18 +118,36 @@ public class CurrentWorkoutView extends Activity {
      * TODO: Take an ID arg, if null, return the latest one in the database, if
      * none available return new instance.
      */
-    protected Workout getCurrentWorkout() {
-        return new Workout.Builder( new Date().getTime(), 0 ).build();
+    protected Workout getCurrentWorkout(Long workoutId) {
+        try {
+            Dao< Workout, Long> workoutDao = helper.getWorkoutDao();
+            if (workoutId != null) {
+                currentWorkout = workoutDao.queryForId( workoutId );
+            }
+            /**
+             * If the current workout isn't initialized yet, create a new on.
+             */
+            if ( currentWorkout == null ) {
+                currentWorkout = new Workout.Builder( new Date().getTime() ).build();
+                workoutDao.create( currentWorkout );
+                
+            }
+        } catch ( SQLException e ) {
+            throw new IllegalStateException( e );
+        }
+        return currentWorkout;
     }
 
-    protected Workout getHelper() {
-        if ( helper == null ) {
-            /*
-             * TODO: Get databasename, oldversion, newversion, from Android manifest.
-             */
-            WorkoutTrackerDatabaseHelperFactory factory = WorkoutTrackerDatabaseHelperFactory
-                    .getFactory( this.getApplicationContext(), "", null, 0, 0 );
-            helper = factory.createHelper();
-        }
+    
+    protected void initialize() {
+        factory = WorkoutTrackerDatabaseHelperFactory
+        .getFactory();
+        helper = factory.createHelper( getApplicationContext() );
+        
+        currentWorkout = getCurrentWorkout( null );
+        List < Exercise > exercises = currentWorkout.exercisesPerformed;
+        exerciseListAdapter = new ArrayAdapter < Exercise >(
+                this, android.R.layout.simple_expandable_list_item_1, exercises );
+        
     }
 }

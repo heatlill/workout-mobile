@@ -19,6 +19,10 @@ public class Exercise implements DataI {
     public static final List < Exercise > EMPTY_EXERCISES = Collections
             .emptyList();
 
+    
+    public Exercise() {
+        this( new Builder( "New Exercise" ) );
+    }
     private Exercise(Builder builder) {
         super();
         if ( builder == null || builder.name == null ) {
