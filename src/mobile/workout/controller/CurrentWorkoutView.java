@@ -23,7 +23,6 @@ import android.widget.ListView;
 import android.widget.PopupWindow;
 
 import com.j256.ormlite.dao.Dao;
-import com.j256.ormlite.misc.SqlExceptionUtil;
 
 public class CurrentWorkoutView extends Activity {
     private static String TAG = CurrentWorkoutView.class.getName();
@@ -70,11 +69,17 @@ public class CurrentWorkoutView extends Activity {
         super.onCreate( savedInstanceState );
     }
 
+    /*
+     * TODO - Rename this method to openExersizeSetEditView() and
+     * open new activity.  Move the save code to the ExersizeSetEditView's
+     * save button.
+     */
     private void addExercise() {
         List < Exercise > exercises = new ArrayList < Exercise >(
                 currentWorkout.exercisesPerformed );
         Exercise exercise = new Exercise();
         exercise.name = "Exercise" + ( exercises.size() + 1 );
+        exercise.unitId = Long.valueOf( 1000 );
         try {
             helper.getExerciseDao().createOrUpdate( exercise );
         } catch ( SQLException e ) {
