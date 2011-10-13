@@ -7,16 +7,14 @@ import mobile.workout.data.SetGroup;
 import mobile.workout.data.Workout;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-import com.j256.ormlite.android.AndroidConnectionSource;
+import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
 import com.j256.ormlite.dao.Dao;
-import com.j256.ormlite.dao.DaoManager;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 
-public class WorkoutTrackerDatabaseHelper extends SQLiteOpenHelper {
+public class WorkoutTrackerDatabaseHelper extends OrmLiteSqliteOpenHelper {
     private static final String DATABASE_NAME = "WORKOUT_TRACKER.db";
     private static final int DATABASE_VERSION = 1;
 
@@ -32,12 +30,6 @@ public class WorkoutTrackerDatabaseHelper extends SQLiteOpenHelper {
     }
 
     @Override
-    public void onCreate( SQLiteDatabase database ) {
-        ConnectionSource connectionSource = new AndroidConnectionSource(
-                getWritableDatabase() );
-        onCreate( database, connectionSource );
-    }
-
     public void onCreate( SQLiteDatabase database,
             ConnectionSource connectionSource ) {
         try {
@@ -53,42 +45,26 @@ public class WorkoutTrackerDatabaseHelper extends SQLiteOpenHelper {
 
     public Dao < Exercise, Long > getExerciseDao() throws SQLException {
         if ( exerciseDao == null ) {
-            ConnectionSource connectionSource = new AndroidConnectionSource(
-                    getWritableDatabase() );
-            exerciseDao = DaoManager.createDao( connectionSource,
-                    Exercise.class );
+            exerciseDao = getDao( Exercise.class );
         }
         return exerciseDao;
     }
 
     public Dao < SetGroup, Long > getSetGroupDao() throws SQLException {
         if ( setGroupDao == null ) {
-            ConnectionSource connectionSource = new AndroidConnectionSource(
-                    getWritableDatabase() );
-            setGroupDao = DaoManager.createDao( connectionSource,
-                    SetGroup.class );
+            setGroupDao = getDao( SetGroup.class );
         }
         return setGroupDao;
     }
 
     public Dao < Workout, Long > getWorkoutDao() throws SQLException {
         if ( workoutDao == null ) {
-            ConnectionSource connectionSource = new AndroidConnectionSource(
-                    getWritableDatabase() );
-            workoutDao = DaoManager.createDao( connectionSource, Workout.class );
+            workoutDao = getDao( Workout.class );
         }
         return workoutDao;
     }
 
     @Override
-    public void onUpgrade( SQLiteDatabase database, int oldVersion,
-            int newVersion ) {
-        ConnectionSource connectionSource = new AndroidConnectionSource(
-                getWritableDatabase() );
-        onUpgrade( database, connectionSource, oldVersion, newVersion );
-
-    }
-
     public void onUpgrade( SQLiteDatabase database,
             ConnectionSource connectionSource, int oldVersion, int newVersion ) {
         try {

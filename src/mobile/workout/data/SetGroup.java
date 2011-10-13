@@ -1,33 +1,27 @@
 package mobile.workout.data;
 
-import java.util.Collections;
-import java.util.List;
-
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
+@DatabaseTable( tableName="set_group" )
 public class SetGroup implements DataI {
-    public long timeId;
+    @DatabaseField( columnName="id", id=true, canBeNull=false )
+    public long id;
+    @DatabaseField( columnName="sequence_index", canBeNull=false )
     public Integer sequenceIndex;
+    @DatabaseField( columnName="repitition_count", canBeNull=false )
     public Integer repititionCount;
-    public static final List < SetGroup > EMPTY_LIST = Collections.emptyList();
-    private SetGroup( Builder builder ) {
+    private SetGroup( Long id ) {
         super();
-        if ( builder == null ) {
-            throw new IllegalArgumentException( "Invalid builder argument." );
+        if ( id == null ) {
+            throw new IllegalArgumentException( "Invalid id argument." );
         }
-        timeId = System.currentTimeMillis();
-        this.repititionCount = builder.repititionCount;
-        this.sequenceIndex = builder.sequenceIndex;
+        this.id = id;
+        this.sequenceIndex = 0;
+        this.repititionCount = 0;
     }
     
-    public static final class Builder {
-        private Integer sequenceIndex;
-        private Integer repititionCount;
-        public Builder( Integer sequenceIndex, Integer repititionCount ) {
-            super();
-            this.sequenceIndex = sequenceIndex;
-            this.repititionCount = repititionCount;
-        }
-        public SetGroup build() {
-            return new SetGroup( this );
-        }
+    public SetGroup() {
+       this( System.currentTimeMillis() );
     }
+    
 }

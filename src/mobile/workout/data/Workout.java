@@ -1,48 +1,32 @@
 package mobile.workout.data;
 
+import java.sql.Date;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
-@DatabaseTable( tableName="workout" )
+
+@DatabaseTable(tableName = "workout")
 public class Workout implements DataI {
-    @DatabaseField( columnName="id", id=true, canBeNull=false )
-    public long timeId;
-    @DatabaseField( columnName="workout_date", canBeNull=false )
-    public final Long datePerformed;
-    public final List < Exercise > exercisesPerformed;
+    @DatabaseField(columnName = "id", id = true, canBeNull = false)
+    public Long id;
+    @DatabaseField(columnName = "workout_date", canBeNull = false)
+    public Long datePerformed;
+    public List < Exercise > exercisesPerformed;
 
-    private Workout(final Builder builder) {
+    private Workout(Long id) {
         super();
-        if ( builder == null || builder.datePerformed == null ) {
-            throw new IllegalArgumentException( "Invalid builder argument." );
+        if ( id == null ) {
+            throw new IllegalArgumentException( "Invalid id argument." );
         }
-        timeId = System.currentTimeMillis();
-        datePerformed = builder.datePerformed;
-        exercisesPerformed = builder.exercisesPerformed == null ? Exercise.EMPTY_EXERCISES
-                : builder.exercisesPerformed;
+        this.id = id;
+        this.datePerformed = new Date( id ).getTime();
+        this.exercisesPerformed = new ArrayList < Exercise >();
     }
-    
+
     public Workout() {
-        this( new Builder( System.currentTimeMillis() ) );
+        this( System.currentTimeMillis() );
     }
 
-    public static final class Builder {
-        public Builder( Long datePerformed ) {
-            super();
-            this.datePerformed = datePerformed;
-        }
-
-        private Long datePerformed;
-        private List < Exercise > exercisesPerformed;
-
-        public Builder setExerciesPerformed( List < Exercise > exercise ) {
-            this.exercisesPerformed = exercise;
-            return this;
-        }
-
-        public Workout build() {
-            return new Workout( this );
-        }
-    }
 }
